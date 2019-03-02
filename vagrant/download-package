@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+##
+# utility to download packages for vagrant
+##
+
+error_show_usage() {
+  usage
+  exit 1
+}
+
+usage() {
+  echo "Usage: $0 -d DIRECTORY-TO-INSTALL-IN -p PACKAGE-NAME" 1>&2
+}
+
+if [ $# -lt 1 ]; then
+  echo "Not enough arguments"
+  error_show_usage
+fi
+
+while getopts "d:hp:u:" options; do
+  case "${options}" in
+    d)
+      DESTINATION=${OPTARG}
+      ;;
+    h)
+      usage
+      exit 0
+      ;;
+    p)
+      PACKAGE=${OPTARG}
+      ;;
+    u)
+      URL=${OPTARG}
+      ;;
+    :)
+      error_show_usage
+      ;;
+    *)
+      error_show_usage
+      ;;
+  esac
+done
+
+# Check that desintation is valid
+if [ ! -d ${DESTINATION} ]; then
+  echo "A destination directory is required and must exist"
+  error_show_usage
+fi
+
+# Check PACKAGE is defined
+if [ -z ${PACKAGE} ]; then
+  echo "Package name must be defined"
+  error_show_usage
+fi
+
+# Check URL is defined
+if [ -z ${URL} ]; then
+  echo "URL name must be defined"
+  error_show_usage
+fi
+
+# download package if not already in packages directory
+echo "Checking if package is downloaded..."
+if [ ! -f ${DESTINATION}/${PACKAGE} ]; then
+  echo "Downloading ${PACKAGE}..."
+  wget "${URL}" -O "${DESTINATION}/${PACKAGE}"
+fi

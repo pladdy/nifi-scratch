@@ -1,0 +1,10 @@
+data/
+
+# ruby
+.bundle
+vendor/
+
+# vagrant
+.vagrant
+vagrant/packages
+ubuntu*.log

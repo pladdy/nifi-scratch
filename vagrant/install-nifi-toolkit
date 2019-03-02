@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+SCRIPT_DIR="$(dirname $0)"
+DESTINATION="/vagrant/vagrant/packages"
+MIRROR="http://mirror.metrocast.net/apache/nifi/"
+PACKAGE="nifi-toolkit-1.9.0-bin.tar.gz"
+VERSION="1.9.0"
+PACKAGE_SHA256="a4a2dc637a3006d6493948e53663e3cab756343e249cd27e89d3b3b84f09ab68"
+
+${SCRIPT_DIR}/download-package -d "${DESTINATION}" -p "${PACKAGE}" -u "${MIRROR}/${VERSION}/${PACKAGE}"
+
+# compare
+DOWNLOADED_SHA256=`sha256sum ${DESTINATION}/${PACKAGE} | cut -d ' ' -f 1`
+NIFI_DIR="/opt/nifi-toolkit-1.9.0"
+
+if [ "${PACKAGE_SHA256}" = "${DOWNLOADED_SHA256}" ]; then
+  echo "Checksum is valid"
+  echo "Installing ${PACKAGE}..."
+  mkdir -p "${NIFI_DIR}"
+  tar -C "/opt" -xzf "${DESTINATION}/${PACKAGE}"
+  ${NIFI_DIR}/bin/nifi.sh install
+  systemctl daemon-reload
+else
+  echo "Checksums don't match: Expected: ${PACKAGE_SHA256}, Actual: ${DOWNLOADED_SHA256}"
+  exit 1
+fi

@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+
+require 'csv'
+require 'faker'
+
+Faker::Config.random = Random.new(3) # 3, it's a magic number
+
+ROWS = 10
+
+CSV.open('data/fake.csv', 'w') do |csv|
+  csv << [
+    "name",
+    "date_time",
+    "manufacturer",
+    "serial",
+    "source_ipv4",
+    "currency"
+  ]
+
+  (1..ROWS).each do |i|
+    csv << [
+      Faker::Name.unique.name,
+      Faker::Time.unique.backward(365),
+      Faker::Device.manufacturer,
+      Faker::Device.serial,
+      Faker::Internet.ip_v4_address,
+      Faker::Currency.code
+    ]
+  end
+end
