@@ -1,23 +1,32 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
+##
+# meant to be run in vagrant vm
+##
+
 SCRIPT_DIR="$(dirname $0)"
 DESTINATION="/vagrant/vagrant/packages"
-MIRROR="http://mirror.metrocast.net/apache/nifi/"
-PACKAGE="nifi-1.9.0-bin.tar.gz"
 VERSION="1.9.0"
+MIRROR="http://mirror.metrocast.net/apache/nifi/${VERSION}"
+PACKAGE="nifi-${VERSION}-bin.tar.gz"
 PACKAGE_SHA256="2ea3e0a3a0488d5ac582f350322d0d44b05e5bcfc3cf3a303c85270de90707b1"
 
-${SCRIPT_DIR}/download-package -d "${DESTINATION}" -p "${PACKAGE}" -u "${MIRROR}/${VERSION}/${PACKAGE}"
+${SCRIPT_DIR}/download-package -d "${DESTINATION}" -p "${PACKAGE}" -u "${MIRROR}/${PACKAGE}"
+
+PACKAGE_PATH="${DESTINATION}/${PACKAGE}"
+INSTALL_PATH="/opt"
 
 # compare
-DOWNLOADED_SHA256=`sha256sum ${DESTINATION}/${PACKAGE} | cut -d ' ' -f 1`
-NIFI_DIR="/opt/nifi-1.9.0"
+DOWNLOADED_SHA256=`sha256sum "${PACKAGE_PATH}" | cut -d ' ' -f 1`
+NIFI_DIR="/opt/nifi-${VERSION}"
 
 if [ "${PACKAGE_SHA256}" = "${DOWNLOADED_SHA256}" ]; then
   echo "Checksum is valid"
   echo "Installing ${PACKAGE}..."
   mkdir -p "${NIFI_DIR}"
-  tar -C "/opt" -xzf "${DESTINATION}/${PACKAGE}"
+  tar -C "${INSTALL_PATH}" -xzf "${PACKAGE_PATH}"
   ${NIFI_DIR}/bin/nifi.sh install
   systemctl daemon-reload
 else

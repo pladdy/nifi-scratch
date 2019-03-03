@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 ##
+# meant to be called in a vagrant.
+#
 # utility to download packages for vagrant
 ##
 

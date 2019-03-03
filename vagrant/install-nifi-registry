@@ -8,10 +8,10 @@ set -euo pipefail
 
 SCRIPT_DIR="$(dirname $0)"
 DESTINATION="/vagrant/vagrant/packages"
-VERSION="1.9.0"
-MIRROR="http://mirror.metrocast.net/apache/nifi/${VERSION}"
-PACKAGE="nifi-toolkit-${VERSION}-bin.tar.gz"
-PACKAGE_SHA256="a4a2dc637a3006d6493948e53663e3cab756343e249cd27e89d3b3b84f09ab68"
+VERSION="0.3.0"
+MIRROR="http://mirror.metrocast.net/apache/nifi/nifi-registry/nifi-registry-${VERSION}"
+PACKAGE="nifi-registry-${VERSION}-bin.tar.gz"
+PACKAGE_SHA256="4e432b6436881d641c45595cb98f7f6f3c396ca28dd85ce51c7b66c9b2bf8710"
 
 ${SCRIPT_DIR}/download-package -d "${DESTINATION}" -p "${PACKAGE}" -u "${MIRROR}/${PACKAGE}"
 
@@ -20,13 +20,15 @@ INSTALL_PATH="/opt"
 
 # compare
 DOWNLOADED_SHA256=`sha256sum "${PACKAGE_PATH}" | cut -d ' ' -f 1`
-NIFI_DIR="/opt/nifi-${VERSION}"
+NIFI_DIR="/opt/nifi-registry-${VERSION}"
 
 if [ "${PACKAGE_SHA256}" = "${DOWNLOADED_SHA256}" ]; then
   echo "Checksum is valid"
   echo "Installing ${PACKAGE}..."
   mkdir -p "${NIFI_DIR}"
   tar -C "${INSTALL_PATH}" -xzf "${PACKAGE_PATH}"
+  ${NIFI_DIR}/bin/nifi-registry.sh install
+  systemctl daemon-reload
 else
   echo "Checksums don't match: Expected: ${PACKAGE_SHA256}, Actual: ${DOWNLOADED_SHA256}"
   exit 1

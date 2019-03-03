@@ -7,4 +7,5 @@ vendor/
 # vagrant
 .vagrant
 vagrant/packages
+vagrant/nifi-backup
 ubuntu*.log
