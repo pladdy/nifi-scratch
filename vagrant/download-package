@@ -65,8 +65,10 @@ if [ -z ${URL} ]; then
 fi
 
 # download package if not already in packages directory
-echo "Checking if package is downloaded..."
+echo "Checking if ${PACKAGE} is downloaded..."
 if [ ! -f ${DESTINATION}/${PACKAGE} ]; then
   echo "Downloading ${PACKAGE}..."
-  wget "${URL}" -O "${DESTINATION}/${PACKAGE}"
+  echo "Sending logs to ${DESTINATION}/${PACKAGE}.log"
+  wget "${URL}" -O "${DESTINATION}/${PACKAGE}" -o "${DESTINATION}/${PACKAGE}.log"
 fi
+echo "${PACKAGE} is downloaded."

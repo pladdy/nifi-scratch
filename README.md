@@ -19,15 +19,10 @@ Installed this package:
 `pipenv install faker`
 
 ## Backup and restore
-On a vagrant:
 
-Backup:
+`make backup`
 
-`sudo /opt/nifi-toolkit-1.9.0/bin/file-manager.sh --operation=backup --backupDir=/vagrant/vagrant/nifi-backup  --nifiCurrentDir /opt/nifi-1.9.0`
-
-Restore:
-TODO: can't same current and rollback dirs
-`sudo /opt/nifi-toolkit-1.9.0/bin/file-manager.sh --operation=restore --backupDir=/vagrant/vagrant/nifi-backup --nifiCurrentDir /opt/nifi-1.9.0 --nifiRollbackDir /opt/nifi-1.9.0`
+`make restore`
 
 ## Resources
 - Docker: https://hub.docker.com/r/apache/nifi

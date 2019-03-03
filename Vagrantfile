@@ -34,4 +34,32 @@ Vagrant.configure("2") do |config|
     systemctl start nifi-registry
     SHELL
   end
+
+  # explicit provision commands
+
+  config.vm.provision "backup-nifi", type: "shell", run: "never" do |s|
+    s.inline = <<-SHELL
+    /opt/nifi-toolkit-1.9.0/bin/file-manager.sh \
+      -v \
+      --operation backup \
+      --backupDir /vagrant/vagrant/nifi-backup  \
+      --nifiCurrentDir /opt/nifi-1.9.0
+    SHELL
+  end
+
+  config.vm.provision "restore-nifi", type: "shell", run: "never" do |s|
+    s.inline = <<-SHELL
+    systemctl stop nifi
+    systemctl stop nifi-registry
+
+    /opt/nifi-toolkit-1.9.0/bin/file-manager.sh \
+      -v \
+      --operation restore \
+      --backupDir /vagrant/vagrant/nifi-backup \
+      --nifiRollbackDir /opt/nifi-1.9.0
+
+    systemctl start nifi
+    systemctl start nifi-registry
+    SHELL
+  end
 end

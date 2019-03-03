@@ -1,6 +1,6 @@
-.PHONY: data docker mac-dependencies mac-python python-dependencies vagrant
+.PHONY: data docker mac-dependencies vagrant vendor
 
-all: python-dependencies
+all: vendor
 
 data/new:
 	mkdir -p $@
@@ -15,14 +15,24 @@ data: data/processed data/new
 docker:
 	docker run --name nifi -p 8080:8080 -d apache/nifi:latest
 
-mac-dependencies: mac-python python-dependencies
+mac-dependencies: mac-ruby vendor
 
-mac-python:
-	-brew install python3
+mac-ruby:
+	brew install rbenv
+	rbenv install -s
 
-python-dependencies:
-	pip3 install pipenv
-	pipenv install
+nifi-backup: vagrant
+	vagrant provision --provision-with backup-nifi
+
+nifi-install: vagrant
+	vagrant provision --provision-with install-nifi
+
+nifi-restore: vagrant
+	vagrant provision --provision-with restore-nifi
+
+nifi-run: vagrant
+	open http://localhost:8080/nifi/
+	open http://localhost:18080/nifi-registry/
 
 vagrant/nifi-backup:
 	mkdir -p $@
@@ -32,8 +42,6 @@ vagrant/packages:
 
 vagrant: vagrant/nifi-backup vagrant/packages
 	vagrant up
-	open http://localhost:8080/nifi/
-	open http://localhost:18080/nifi-registry/
 
 vendor:
 	bundle install --path $@
