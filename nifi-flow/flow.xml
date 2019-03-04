@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flowController encoding-version="1.3">
+  <maxTimerDrivenThreadCount>10</maxTimerDrivenThreadCount>
+  <maxEventDrivenThreadCount>5</maxEventDrivenThreadCount>
+  <registries>
+    <flowRegistry>
+      <id>45a4249a-0169-1000-06b8-e9ff445f65f6</id>
+      <name>Local Registry</name>
+      <url>http://localhost:18080</url>
+      <description/>
+    </flowRegistry>
+  </registries>
+  <rootGroup>
+    <id>459e97d4-0169-1000-215f-4698e24253bb</id>
+    <name>NiFi Flow</name>
+    <position x="0.0" y="0.0"/>
+    <comment/>
+    <processGroup>
+      <id>45a36d01-0169-1000-2a2e-6cbce530ab00</id>
+      <versionedComponentId>99ca27d8-39d7-32fe-84c1-b88a8b78e5fd</versionedComponentId>
+      <name>Pladdy-Test</name>
+      <position x="155.96621704101562" y="-534.4656257629395"/>
+      <comment/>
+      <versionControlInformation>
+        <registryId>45a4249a-0169-1000-06b8-e9ff445f65f6</registryId>
+        <bucketId>b1fcad40-de5f-4b13-99e2-cae77fc90e9f</bucketId>
+        <bucketName>Pladdy-Test</bucketName>
+        <flowId>5483510a-4ee4-4c44-ad4b-791fcc9c3c21</flowId>
+        <flowName>Pladdy-Test-Flow</flowName>
+        <flowDescription/>
+        <version>1</version>
+      </versionControlInformation>
+      <processor>
+        <id>460b5aff-0169-1000-49c3-a7ecdca4c5b1</id>
+        <versionedComponentId>2d290df8-9ee3-397c-b1c9-bff0cbe2945f</versionedComponentId>
+        <name>ConvertCSVToAvro</name>
+        <position x="913.9999927259112" y="264.9999790842876"/>
+        <styles/>
+        <comment/>
+        <class>org.apache.nifi.processors.kite.ConvertCSVToAvro</class>
+        <bundle>
+          <group>org.apache.nifi</group>
+          <artifact>nifi-kite-nar</artifact>
+          <version>1.9.0</version>
+        </bundle>
+        <maxConcurrentTasks>1</maxConcurrentTasks>
+        <schedulingPeriod>0 sec</schedulingPeriod>
+        <penalizationPeriod>30 sec</penalizationPeriod>
+        <yieldPeriod>1 sec</yieldPeriod>
+        <bulletinLevel>WARN</bulletinLevel>
+        <lossTolerant>false</lossTolerant>
+        <scheduledState>RUNNING</scheduledState>
+        <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
+        <executionNode>ALL</executionNode>
+        <runDurationNanos>0</runDurationNanos>
+        <property>
+          <name>Hadoop configuration files</name>
+        </property>
+        <property>
+          <name>Record schema</name>
+          <value>${inferred.avro.schema}</value>
+        </property>
+        <property>
+          <name>CSV charset</name>
+          <value>utf8</value>
+        </property>
+        <property>
+          <name>CSV delimiter</name>
+          <value>,</value>
+        </property>
+        <property>
+          <name>CSV quote character</name>
+          <value>"</value>
+        </property>
+        <property>
+          <name>CSV escape character</name>
+          <value>\</value>
+        </property>
+        <property>
+          <name>Use CSV header line</name>
+          <value>false</value>
+        </property>
+        <property>
+          <name>Lines to skip</name>
+          <value>0</value>
+        </property>
+        <property>
+          <name>kite-compression-type</name>
+          <value>SNAPPY</value>
+        </property>
+        <autoTerminatedRelationship>failure</autoTerminatedRelationship>
+        <autoTerminatedRelationship>incompatible</autoTerminatedRelationship>
+      </processor>
+      <processor>
+        <id>460a2dae-0169-1000-eaec-06a2bd03320f</id>
+        <versionedComponentId>bc0a817b-920e-39fb-82b2-241e68a65509</versionedComponentId>
+        <name>InferAvroSchema</name>
+        <position x="912.9999927259112" y="34.99997526959032"/>
+        <styles/>
+        <comment/>
+        <class>org.apache.nifi.processors.kite.InferAvroSchema</class>
+        <bundle>
+          <group>org.apache.nifi</group>
+          <artifact>nifi-kite-nar</artifact>
+          <version>1.9.0</version>
+        </bundle>
+        <maxConcurrentTasks>1</maxConcurrentTasks>
+        <schedulingPeriod>0 sec</schedulingPeriod>
+        <penalizationPeriod>30 sec</penalizationPeriod>
+        <yieldPeriod>1 sec</yieldPeriod>
+        <bulletinLevel>DEBUG</bulletinLevel>
+        <lossTolerant>false</lossTolerant>
+        <scheduledState>RUNNING</scheduledState>
+        <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
+        <executionNode>ALL</executionNode>
+        <runDurationNanos>0</runDurationNanos>
+        <property>
+          <name>Schema Output Destination</name>
+          <value>flowfile-attribute</value>
+        </property>
+        <property>
+          <name>Input Content Type</name>
+          <value>csv</value>
+        </property>
+        <property>
+          <name>CSV Header Definition</name>
+        </property>
+        <property>
+          <name>Get CSV Header Definition From Data</name>
+          <value>true</value>
+        </property>
+        <property>
+          <name>CSV Header Line Skip Count</name>
+          <value>0</value>
+        </property>
+        <property>
+          <name>CSV delimiter</name>
+          <value>,</value>
+        </property>
+        <property>
+          <name>CSV Escape String</name>
+          <value>\</value>
+        </property>
+        <property>
+          <name>CSV Quote String</name>
+          <value>'</value>
+        </property>
+        <property>
+          <name>Pretty Avro Output</name>
+          <value>true</value>
+        </property>
+        <property>
+          <name>Avro Record Name</name>
+          <value>pladdy_test</value>
+        </property>
+        <property>
+          <name>Number Of Records To Analyze</name>
+          <value>10</value>
+        </property>
+        <property>
+          <name>Charset</name>
+          <value>UTF-8</value>
+        </property>
+        <autoTerminatedRelationship>unsupported content</autoTerminatedRelationship>
+        <autoTerminatedRelationship>failure</autoTerminatedRelationship>
+        <autoTerminatedRelationship>original</autoTerminatedRelationship>
+      </processor>
+      <processor>
+        <id>460c5e92-0169-1000-7140-78af5512c8c3</id>
+        <versionedComponentId>ca41381b-4d82-3517-ba43-39af1ace6136</versionedComponentId>
+        <name>ConvertAvroToORC</name>
+        <position x="915.9999927259112" y="474.99994856670946"/>
+        <styles/>
+        <comment/>
+        <class>org.apache.nifi.processors.hive.ConvertAvroToORC</class>
+        <bundle>
+          <group>org.apache.nifi</group>
+          <artifact>nifi-hive-nar</artifact>
+          <version>1.9.0</version>
+        </bundle>
+        <maxConcurrentTasks>1</maxConcurrentTasks>
+        <schedulingPeriod>0 sec</schedulingPeriod>
+        <penalizationPeriod>30 sec</penalizationPeriod>
+        <yieldPeriod>1 sec</yieldPeriod>
+        <bulletinLevel>WARN</bulletinLevel>
+        <lossTolerant>false</lossTolerant>
+        <scheduledState>RUNNING</scheduledState>
+        <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
+        <executionNode>ALL</executionNode>
+        <runDurationNanos>0</runDurationNanos>
+        <property>
+          <name>orc-config-resources</name>
+        </property>
+        <property>
+          <name>orc-stripe-size</name>
+          <value>64 MB</value>
+        </property>
+        <property>
+          <name>orc-buffer-size</name>
+          <value>10 KB</value>
+        </property>
+        <property>
+          <name>orc-compression-type</name>
+          <value>NONE</value>
+        </property>
+        <property>
+          <name>orc-hive-table-name</name>
+        </property>
+        <autoTerminatedRelationship>failure</autoTerminatedRelationship>
+      </processor>
+      <processor>
+        <id>4608c01b-0169-1000-1c5a-4d904a84a214</id>
+        <versionedComponentId>273bd01c-3a41-39e6-bf79-c36df71b622e</versionedComponentId>
+        <name>PutFile</name>
+        <position x="310.99999272591117" y="467.9999638254985"/>
+        <styles/>
+        <comment/>
+        <class>org.apache.nifi.processors.standard.PutFile</class>
+        <bundle>
+          <group>org.apache.nifi</group>
+          <artifact>nifi-standard-nar</artifact>
+          <version>1.9.0</version>
+        </bundle>
+        <maxConcurrentTasks>1</maxConcurrentTasks>
+        <schedulingPeriod>0 sec</schedulingPeriod>
+        <penalizationPeriod>30 sec</penalizationPeriod>
+        <yieldPeriod>1 sec</yieldPeriod>
+        <bulletinLevel>WARN</bulletinLevel>
+        <lossTolerant>false</lossTolerant>
+        <scheduledState>RUNNING</scheduledState>
+        <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
+        <executionNode>ALL</executionNode>
+        <runDurationNanos>0</runDurationNanos>
+        <property>
+          <name>Directory</name>
+          <value>/vagrant/data/processed</value>
+        </property>
+        <property>
+          <name>Conflict Resolution Strategy</name>
+          <value>fail</value>
+        </property>
+        <property>
+          <name>Create Missing Directories</name>
+          <value>true</value>
+        </property>
+        <property>
+          <name>Maximum File Count</name>
+        </property>
+        <property>
+          <name>Last Modified Time</name>
+        </property>
+        <property>
+          <name>Permissions</name>
+        </property>
+        <property>
+          <name>Owner</name>
+        </property>
+        <property>
+          <name>Group</name>
+        </property>
+        <autoTerminatedRelationship>success</autoTerminatedRelationship>
+        <autoTerminatedRelationship>failure</autoTerminatedRelationship>
+      </processor>
+      <processor>
+        <id>4608421c-0169-1000-2f80-39d858eab0e0</id>
+        <versionedComponentId>6515149b-3817-3e97-8a10-b25290523dd1</versionedComponentId>
+        <name>Get Fake Data File</name>
+        <position x="313.99999272591117" y="29.999979084287588"/>
+        <styles/>
+        <comment/>
+        <class>org.apache.nifi.processors.standard.GetFile</class>
+        <bundle>
+          <group>org.apache.nifi</group>
+          <artifact>nifi-standard-nar</artifact>
+          <version>1.9.0</version>
+        </bundle>
+        <maxConcurrentTasks>1</maxConcurrentTasks>
+        <schedulingPeriod>0 sec</schedulingPeriod>
+        <penalizationPeriod>30 sec</penalizationPeriod>
+        <yieldPeriod>1 sec</yieldPeriod>
+        <bulletinLevel>WARN</bulletinLevel>
+        <lossTolerant>false</lossTolerant>
+        <scheduledState>RUNNING</scheduledState>
+        <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
+        <executionNode>ALL</executionNode>
+        <runDurationNanos>0</runDurationNanos>
+        <property>
+          <name>Input Directory</name>
+          <value>/vagrant/data/new</value>
+        </property>
+        <property>
+          <name>File Filter</name>
+          <value>[^\.].*</value>
+        </property>
+        <property>
+          <name>Path Filter</name>
+        </property>
+        <property>
+          <name>Batch Size</name>
+          <value>10</value>
+        </property>
+        <property>
+          <name>Keep Source File</name>
+          <value>false</value>
+        </property>
+        <property>
+          <name>Recurse Subdirectories</name>
+          <value>true</value>
+        </property>
+        <property>
+          <name>Polling Interval</name>
+          <value>0 sec</value>
+        </property>
+        <property>
+          <name>Ignore Hidden Files</name>
+          <value>true</value>
+        </property>
+        <property>
+          <name>Minimum File Age</name>
+          <value>0 sec</value>
+        </property>
+        <property>
+          <name>Maximum File Age</name>
+        </property>
+        <property>
+          <name>Minimum File Size</name>
+          <value>0 B</value>
+        </property>
+        <property>
+          <name>Maximum File Size</name>
+        </property>
+      </processor>
+      <connection>
+        <id>460c2274-0169-1000-2a80-00d4ac17a8b4</id>
+        <versionedComponentId>32a93983-10d2-3dce-90a6-b4d9c050f567</versionedComponentId>
+        <name/>
+        <bendPoints/>
+        <labelIndex>1</labelIndex>
+        <zIndex>0</zIndex>
+        <sourceId>460b5aff-0169-1000-49c3-a7ecdca4c5b1</sourceId>
+        <sourceGroupId>45a36d01-0169-1000-2a2e-6cbce530ab00</sourceGroupId>
+        <sourceType>PROCESSOR</sourceType>
+        <destinationId>4608c01b-0169-1000-1c5a-4d904a84a214</destinationId>
+        <destinationGroupId>45a36d01-0169-1000-2a2e-6cbce530ab00</destinationGroupId>
+        <destinationType>PROCESSOR</destinationType>
+        <relationship>success</relationship>
+        <maxWorkQueueSize>10000</maxWorkQueueSize>
+        <maxWorkQueueDataSize>1 GB</maxWorkQueueDataSize>
+        <flowFileExpiration>0 sec</flowFileExpiration>
+        <loadBalanceStrategy>DO_NOT_LOAD_BALANCE</loadBalanceStrategy>
+        <partitioningAttribute/>
+        <loadBalanceCompression>DO_NOT_COMPRESS</loadBalanceCompression>
+      </connection>
+      <connection>
+        <id>460cb4e4-0169-1000-1fb6-b91b0b77d724</id>
+        <versionedComponentId>6acaf5fd-e4d2-3d24-b663-326cbbeba08b</versionedComponentId>
+        <name/>
+        <bendPoints/>
+        <labelIndex>1</labelIndex>
+        <zIndex>0</zIndex>
+        <sourceId>460b5aff-0169-1000-49c3-a7ecdca4c5b1</sourceId>
+        <sourceGroupId>45a36d01-0169-1000-2a2e-6cbce530ab00</sourceGroupId>
+        <sourceType>PROCESSOR</sourceType>
+        <destinationId>460c5e92-0169-1000-7140-78af5512c8c3</destinationId>
+        <destinationGroupId>45a36d01-0169-1000-2a2e-6cbce530ab00</destinationGroupId>
+        <destinationType>PROCESSOR</destinationType>
+        <relationship>success</relationship>
+        <maxWorkQueueSize>10000</maxWorkQueueSize>
+        <maxWorkQueueDataSize>1 GB</maxWorkQueueDataSize>
+        <flowFileExpiration>0 sec</flowFileExpiration>
+        <loadBalanceStrategy>DO_NOT_LOAD_BALANCE</loadBalanceStrategy>
+        <partitioningAttribute/>
+        <loadBalanceCompression>DO_NOT_COMPRESS</loadBalanceCompression>
+      </connection>
+      <connection>
+        <id>460a5348-0169-1000-ca6f-89f063298503</id>
+        <versionedComponentId>b8b21a31-b7bf-3151-a06e-37e60bbcd477</versionedComponentId>
+        <name/>
+        <bendPoints/>
+        <labelIndex>1</labelIndex>
+        <zIndex>0</zIndex>
+        <sourceId>4608421c-0169-1000-2f80-39d858eab0e0</sourceId>
+        <sourceGroupId>45a36d01-0169-1000-2a2e-6cbce530ab00</sourceGroupId>
+        <sourceType>PROCESSOR</sourceType>
+        <destinationId>460a2dae-0169-1000-eaec-06a2bd03320f</destinationId>
+        <destinationGroupId>45a36d01-0169-1000-2a2e-6cbce530ab00</destinationGroupId>
+        <destinationType>PROCESSOR</destinationType>
+        <relationship>success</relationship>
+        <maxWorkQueueSize>10000</maxWorkQueueSize>
+        <maxWorkQueueDataSize>1 GB</maxWorkQueueDataSize>
+        <flowFileExpiration>0 sec</flowFileExpiration>
+        <loadBalanceStrategy>DO_NOT_LOAD_BALANCE</loadBalanceStrategy>
+        <partitioningAttribute/>
+        <loadBalanceCompression>DO_NOT_COMPRESS</loadBalanceCompression>
+      </connection>
+      <connection>
+        <id>4610feda-0169-1000-5bda-d6f16c44a673</id>
+        <versionedComponentId>661ebece-45df-3962-91e8-ef8682717896</versionedComponentId>
+        <name/>
+        <bendPoints/>
+        <labelIndex>1</labelIndex>
+        <zIndex>0</zIndex>
+        <sourceId>460c5e92-0169-1000-7140-78af5512c8c3</sourceId>
+        <sourceGroupId>45a36d01-0169-1000-2a2e-6cbce530ab00</sourceGroupId>
+        <sourceType>PROCESSOR</sourceType>
+        <destinationId>4608c01b-0169-1000-1c5a-4d904a84a214</destinationId>
+        <destinationGroupId>45a36d01-0169-1000-2a2e-6cbce530ab00</destinationGroupId>
+        <destinationType>PROCESSOR</destinationType>
+        <relationship>success</relationship>
+        <maxWorkQueueSize>10000</maxWorkQueueSize>
+        <maxWorkQueueDataSize>1 GB</maxWorkQueueDataSize>
+        <flowFileExpiration>0 sec</flowFileExpiration>
+        <loadBalanceStrategy>DO_NOT_LOAD_BALANCE</loadBalanceStrategy>
+        <partitioningAttribute/>
+        <loadBalanceCompression>DO_NOT_COMPRESS</loadBalanceCompression>
+      </connection>
+      <connection>
+        <id>4608dd2e-0169-1000-e2a5-ab83edcfd9f0</id>
+        <versionedComponentId>830a9680-fc8f-33f6-b9bc-3d80506ba078</versionedComponentId>
+        <name/>
+        <bendPoints/>
+        <labelIndex>1</labelIndex>
+        <zIndex>0</zIndex>
+        <sourceId>4608421c-0169-1000-2f80-39d858eab0e0</sourceId>
+        <sourceGroupId>45a36d01-0169-1000-2a2e-6cbce530ab00</sourceGroupId>
+        <sourceType>PROCESSOR</sourceType>
+        <destinationId>4608c01b-0169-1000-1c5a-4d904a84a214</destinationId>
+        <destinationGroupId>45a36d01-0169-1000-2a2e-6cbce530ab00</destinationGroupId>
+        <destinationType>PROCESSOR</destinationType>
+        <relationship>success</relationship>
+        <maxWorkQueueSize>10000</maxWorkQueueSize>
+        <maxWorkQueueDataSize>1 GB</maxWorkQueueDataSize>
+        <flowFileExpiration>0 sec</flowFileExpiration>
+        <loadBalanceStrategy>DO_NOT_LOAD_BALANCE</loadBalanceStrategy>
+        <partitioningAttribute/>
+        <loadBalanceCompression>DO_NOT_COMPRESS</loadBalanceCompression>
+      </connection>
+      <connection>
+        <id>460b9399-0169-1000-73d0-4b0ef5169a91</id>
+        <versionedComponentId>b327d468-2e15-3660-86dc-e3e74ba64868</versionedComponentId>
+        <name/>
+        <bendPoints/>
+        <labelIndex>1</labelIndex>
+        <zIndex>0</zIndex>
+        <sourceId>460a2dae-0169-1000-eaec-06a2bd03320f</sourceId>
+        <sourceGroupId>45a36d01-0169-1000-2a2e-6cbce530ab00</sourceGroupId>
+        <sourceType>PROCESSOR</sourceType>
+        <destinationId>460b5aff-0169-1000-49c3-a7ecdca4c5b1</destinationId>
+        <destinationGroupId>45a36d01-0169-1000-2a2e-6cbce530ab00</destinationGroupId>
+        <destinationType>PROCESSOR</destinationType>
+        <relationship>success</relationship>
+        <maxWorkQueueSize>10000</maxWorkQueueSize>
+        <maxWorkQueueDataSize>1 GB</maxWorkQueueDataSize>
+        <flowFileExpiration>0 sec</flowFileExpiration>
+        <loadBalanceStrategy>DO_NOT_LOAD_BALANCE</loadBalanceStrategy>
+        <partitioningAttribute/>
+        <loadBalanceCompression>DO_NOT_COMPRESS</loadBalanceCompression>
+      </connection>
+    </processGroup>
+  </rootGroup>
+  <controllerServices/>
+  <reportingTasks/>
+</flowController>

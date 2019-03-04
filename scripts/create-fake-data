@@ -5,7 +5,7 @@ require 'faker'
 
 Faker::Config.random = Random.new(3) # 3, it's a magic number
 
-ROWS = 10
+ROWS = 1000
 
 CSV.open('data/new/fake.csv', 'w') do |csv|
   csv << [

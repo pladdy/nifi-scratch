@@ -1,6 +1,6 @@
 .PHONY: data docker mac-dependencies vagrant vendor
 
-all: vendor
+all: mac-dependencies vagrant
 
 data/new:
 	mkdir -p $@
@@ -8,12 +8,12 @@ data/new:
 data/processed:
 	mkdir -p $@
 
-data: data/processed data/new
-	#pipenv run pytest -s -v
-	@bundle exec scripts/fake-data
+data: data/processed data/new vendor
+	bundle exec scripts/create-fake-data
 
-docker:
-	docker run --name nifi -p 8080:8080 -d apache/nifi:latest
+flow-backup: nifi-flow
+	vagrant provision --provision-with backup-nifi-flow
+	gunzip $</flow.xml.gz
 
 mac-dependencies: mac-ruby vendor
 
@@ -23,6 +23,9 @@ mac-ruby:
 
 nifi-backup: vagrant
 	vagrant provision --provision-with backup-nifi
+
+nifi-flow:
+	makedir $@
 
 nifi-install: vagrant
 	vagrant provision --provision-with install-nifi
