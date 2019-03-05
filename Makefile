@@ -15,6 +15,9 @@ flow-backup: nifi-flow
 	vagrant provision --provision-with backup-nifi-flow
 	gunzip $</flow.xml.gz
 
+flow-restore:
+	vagrant provision --provision-with restore-nifi-flow
+
 mac-dependencies: mac-ruby vendor
 
 mac-ruby:

@@ -69,4 +69,20 @@ Vagrant.configure("2") do |config|
     systemctl start nifi-registry
     SHELL
   end
+
+  config.vm.provision "restore-nifi-flow", type: "shell", run: "never" do |s|
+    s.inline = <<-SHELL
+    echo "Stopping nifi"
+    systemctl stop nifi
+    systemctl stop nifi-registry
+
+    echo "Restoring flow"
+    cp /opt/nifi-flow/flow.xml /opt/nifi-1.9.0/conf
+    gzip -f /opt/nifi-1.9.0/conf/flow.xml
+
+    echo "Starting nifi"
+    systemctl start nifi
+    systemctl start nifi-registry
+    SHELL
+  end
 end
