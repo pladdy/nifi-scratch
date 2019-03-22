@@ -7,7 +7,8 @@ Vagrant.configure("2") do |config|
     v.memory = 2048
   end
 
-  config.vm.network "forwarded_port", guest: 8080, host: 8080, auto_correct: true # nifi
+  config.vm.network "forwarded_port", guest: 8080, host: 8080, auto_correct: true # nifi http
+  config.vm.network "forwarded_port", guest: 9443, host: 9443, auto_correct: true # nifi https
   config.vm.network "forwarded_port", guest: 18080, host: 18080, auto_correct: true # nifi registry
 
   config.vm.synced_folder "data", "/var/data" # for syncing data
@@ -24,7 +25,7 @@ Vagrant.configure("2") do |config|
     SHELL
   end
 
-  config.vm.provision "install-nifi", type: "shell" do |s|
+  config.vm.provision "nifi-install", type: "shell" do |s|
     s.inline = <<-SHELL
     /vagrant/vagrant/install-nifi
     systemctl start nifi
@@ -37,14 +38,20 @@ Vagrant.configure("2") do |config|
   end
 
   # explicit provision commands
+  #trust_store = "/top/truststore.jks"
+  #rm #{trust_store}
+  #keytool -import -file /vagrant/cacert.pem -alias cacert -keystore #{trust_store} -storepass trustme -noprompt
 
-  config.vm.provision "backup-nifi-flow", type: "shell", run: "never" do |s|
+  config.vm.provision "nifi-certs", type: "shell", run: "never" do |s|
     s.inline = <<-SHELL
-    cp /opt/nifi-1.9.0/conf/flow.xml.gz /opt/nifi-flow
+    cd /opt
+    /opt/nifi-1.9.0/bin/tls-toolkit.sh standalone -n 'localhost(1)' -C 'CN=nifi,OU=NIFI'
+    cp /opt/nifi-1.9.0/conf/nifi.properties /opt/nifi-1.9.0/conf/nifi.properties.bak
+    cp localhost/* /opt/nifi-1.9.0/conf
     SHELL
   end
 
-  config.vm.provision "backup-nifi", type: "shell", run: "never" do |s|
+  config.vm.provision "nifi-backup", type: "shell", run: "never" do |s|
     s.inline = <<-SHELL
     /opt/nifi-toolkit-1.9.0/bin/file-manager.sh \
       -v \
@@ -54,7 +61,13 @@ Vagrant.configure("2") do |config|
     SHELL
   end
 
-  config.vm.provision "restore-nifi", type: "shell", run: "never" do |s|
+  config.vm.provision "nifi-flow-backup", type: "shell", run: "never" do |s|
+    s.inline = <<-SHELL
+    cp /opt/nifi-1.9.0/conf/flow.xml.gz /opt/nifi-flow
+    SHELL
+  end
+
+  config.vm.provision "nifi-restore", type: "shell", run: "never" do |s|
     s.inline = <<-SHELL
     systemctl stop nifi
     systemctl stop nifi-registry
@@ -70,7 +83,7 @@ Vagrant.configure("2") do |config|
     SHELL
   end
 
-  config.vm.provision "restore-nifi-flow", type: "shell", run: "never" do |s|
+  config.vm.provision "nifi-restore-flow", type: "shell", run: "never" do |s|
     s.inline = <<-SHELL
     echo "Stopping nifi"
     systemctl stop nifi
@@ -83,6 +96,13 @@ Vagrant.configure("2") do |config|
     echo "Starting nifi"
     systemctl start nifi
     systemctl start nifi-registry
+    SHELL
+  end
+
+  config.vm.provision "nifi-stop", type: "shell", run: "never" do |s|
+    s.inline = <<-SHELL
+    systemctl stop nifi
+    systemctl stop nifi-registry
     SHELL
   end
 end

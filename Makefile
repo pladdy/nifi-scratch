@@ -11,13 +11,6 @@ data/processed:
 data: data/processed data/new vendor
 	bundle exec scripts/create-fake-data
 
-flow-backup: nifi-flow
-	vagrant provision --provision-with backup-nifi-flow
-	gunzip $</flow.xml.gz
-
-flow-restore:
-	vagrant provision --provision-with restore-nifi-flow
-
 mac-dependencies: mac-ruby vendor
 
 mac-ruby:
@@ -25,20 +18,30 @@ mac-ruby:
 	rbenv install -s
 
 nifi-backup: vagrant
-	vagrant provision --provision-with backup-nifi
+	vagrant provision --provision-with $@
+
+nifi-flow-backup: nifi-flow
+	vagrant provision --provision-with $@
+	gunzip $</flow.xml.gz
 
 nifi-flow:
 	makedir $@
 
 nifi-install: vagrant
-	vagrant provision --provision-with install-nifi
+	vagrant provision --provision-with $@
 
 nifi-restore: vagrant
-	vagrant provision --provision-with restore-nifi
+	vagrant provision --provision-with $@
+
+nifi-restore-flow:
+	vagrant provision --provision-with $@
 
 nifi-run: vagrant
 	open http://localhost:8080/nifi/
 	open http://localhost:18080/nifi-registry/
+
+nifi-stop: vagrant
+	vagrant provision --provision-with $@
 
 vagrant/nifi-backup:
 	mkdir -p $@
