@@ -27,6 +27,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "nifi-install", type: "shell" do |s|
     s.inline = <<-SHELL
+    set -euo pipefail
     /vagrant/vagrant/install-nifi
     systemctl start nifi
 
@@ -38,21 +39,10 @@ Vagrant.configure("2") do |config|
   end
 
   # explicit provision commands
-  #trust_store = "/top/truststore.jks"
-  #rm #{trust_store}
-  #keytool -import -file /vagrant/cacert.pem -alias cacert -keystore #{trust_store} -storepass trustme -noprompt
-
-  config.vm.provision "nifi-certs", type: "shell", run: "never" do |s|
-    s.inline = <<-SHELL
-    cd /opt
-    /opt/nifi-1.9.0/bin/tls-toolkit.sh standalone -n 'localhost(1)' -C 'CN=nifi,OU=NIFI'
-    cp /opt/nifi-1.9.0/conf/nifi.properties /opt/nifi-1.9.0/conf/nifi.properties.bak
-    cp localhost/* /opt/nifi-1.9.0/conf
-    SHELL
-  end
 
   config.vm.provision "nifi-backup", type: "shell", run: "never" do |s|
     s.inline = <<-SHELL
+    set -euo pipefail
     /opt/nifi-toolkit-1.9.0/bin/file-manager.sh \
       -v \
       --operation backup \
@@ -60,6 +50,33 @@ Vagrant.configure("2") do |config|
       --nifiCurrentDir /opt/nifi-1.9.0
     SHELL
   end
+
+  config.vm.provision "nifi-certs", type: "shell", run: "never" do |s|
+    s.inline = <<-SHELL
+    set -euo pipefail
+
+    /opt/nifi-toolkit-1.9.0/bin/tls-toolkit.sh standalone -n 'localhost(1)' -C 'CN=nifi, OU=NIFI' -o /opt
+    cp /opt/nifi-1.9.0/conf/nifi.properties /opt/nifi-1.9.0/conf/nifi.properties.bak
+    cp /opt/localhost/* /opt/nifi-1.9.0/conf
+    cp /opt/CN* /vagrant
+
+    # create crt from p12
+    mkdir /usr/local/share/ca-certificates/nifi
+    chmod 755 /usr/local/share/ca-certificates/nifi
+
+    openssl pkcs12 -in /opt/CN\=nifi_OU\=NIFI.p12 \
+      -clcerts -nokeys \
+      -out /usr/local/share/ca-certificates/nifi/nifi-client.crt \
+      -passin file:/opt/CN\=nifi_OU\=NIFI.password
+
+    update-ca-certificates
+    SHELL
+  end
+
+  # TODO: convert to provisioner and have alternate method to secure nifi without toolkit
+  #trust_store = "/top/truststore.jks"
+  #rm #{trust_store}
+  #keytool -import -file /vagrant/cacert.pem -alias cacert -keystore #{trust_store} -storepass trustme -noprompt
 
   config.vm.provision "nifi-flow-backup", type: "shell", run: "never" do |s|
     s.inline = <<-SHELL
@@ -69,6 +86,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "nifi-restore", type: "shell", run: "never" do |s|
     s.inline = <<-SHELL
+    set -euo pipefail
     systemctl stop nifi
     systemctl stop nifi-registry
 
@@ -85,14 +103,16 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "nifi-restore-flow", type: "shell", run: "never" do |s|
     s.inline = <<-SHELL
-    echo "Stopping nifi"
-    systemctl stop nifi
-    systemctl stop nifi-registry
-
+    set -euo pipefail
     echo "Restoring flow"
     cp /opt/nifi-flow/flow.xml /opt/nifi-1.9.0/conf
     gzip -f /opt/nifi-1.9.0/conf/flow.xml
+    SHELL
+  end
 
+  config.vm.provision "nifi-start", type: "shell", run: "never" do |s|
+    s.inline = <<-SHELL
+    set -euo pipefail
     echo "Starting nifi"
     systemctl start nifi
     systemctl start nifi-registry
@@ -101,6 +121,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "nifi-stop", type: "shell", run: "never" do |s|
     s.inline = <<-SHELL
+    set -euo pipefail
+    echo "Stopping nifi"
     systemctl stop nifi
     systemctl stop nifi-registry
     SHELL

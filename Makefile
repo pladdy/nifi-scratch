@@ -51,6 +51,8 @@ vagrant/packages:
 
 vagrant: vagrant/nifi-backup vagrant/packages
 	vagrant up
+	vagrant provision --provision-with nifi-start
+	@echo nifi should be up in ~5 seconds...start up is slow
 
 vendor:
 	bundle install --path $@
