@@ -9,3 +9,6 @@ vendor/
 vagrant/packages
 vagrant/nifi-backup
 ubuntu*.log
+
+*.p12
+*.password
